@@ -166,31 +166,47 @@ def scrape_new_reviews_for_product(request):
 
 @api_view(['GET'])
 def changes(request):
-    # get all products and add a brand name to them
+    # # get all products and add a brand name to them
+    # for product in Product.objects.all():
+    #     if "Iphone" in product.product_name:
+    #         product.product_name = product.product_name.replace("Iphone", "iPhone")
+    #     product.save()
+    #
+    # for review in Review.objects.all():
+    #     if "Iphone" in review.product_name:
+    #         review.product_name = review.product_name.replace("Iphone", "iPhone")
+    #     review.save()
+    #
+    #
+    # for analysis in Analysis.objects.all():
+    #     if "Iphone" in analysis.product_name:
+    #         analysis.product_name = analysis.product_name.replace("Iphone", "iPhone")
+    #     analysis.save()
+
+    #
+
+
     for product in Product.objects.all():
         if "Apple" in product.product_name:
             product.brand_name = "Apple"
         elif "Samsung" in product.product_name:
             product.brand_name = "Samsung"
-        product.product_name = product.product_name.title()
         product.save()
-
-    # get all reviews and add a brand name to them
+    # # get all reviews and add a brand name to them
     for review in Review.objects.all():
         if "Apple" in review.product_name:
             review.brand_name = "Apple"
         elif "Samsung" in review.product_name:
             review.brand_name = "Samsung"
-        review.product_name = review.product_name.title()
         review.save()
 
-    # get all analysis and add a brand name to them
+    # # get all analysis and add a brand name to them
     for analysis in Analysis.objects.all():
         if "Apple" in analysis.product_name:
             analysis.brand_name = "Apple"
         elif "Samsung" in analysis.product_name:
             analysis.brand_name = "Samsung"
-        analysis.product_name = analysis.product_name.title()
+
         analysis.save()
 
 
