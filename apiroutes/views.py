@@ -28,17 +28,16 @@ def get_product_analysis(request):
         total_rating = 0
         for review in all_reviews_for_product:
             total_rating += review.score
-            match review.score:
-                case 1:
-                    star_reviews_1+=1
-                case 2:
-                    star_reviews_2+=1
-                case 3:
-                    star_reviews_3+=1
-                case 4:
-                    star_reviews_4+=1
-                case 5:
-                    star_reviews_5+=1
+            if review.score == 1:
+                star_reviews_1 += 1
+            elif review.score == 2:
+                star_reviews_2 += 1
+            elif review.score == 3:
+                star_reviews_3 += 1
+            elif review.score == 4:
+                star_reviews_4 += 1
+            elif review.score == 5:
+                star_reviews_5 += 1
 
 
         average_rating = 0
