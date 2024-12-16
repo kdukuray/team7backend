@@ -15,6 +15,19 @@ class Product(models.Model):
 
 
 
+class Analysis(models.Model):
+    associated_product_url = models.CharField(max_length=255)
+    review_country = models.TextField()
+    one_star_rating = models.IntegerField()
+    two_star_rating = models.IntegerField()
+    three_star_rating = models.IntegerField()
+    four_star_rating = models.IntegerField()
+    five_star_rating = models.IntegerField()
+    sentiment_analysis = models.TextField()
+    average_rating = models.FloatField()
+
+
+
 
 
     # self.review_url: str = review_url

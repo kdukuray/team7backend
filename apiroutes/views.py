@@ -3,12 +3,37 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view
 from apify_client import ApifyClient
 from os import environ
-from .helpers import construct_run_input, generate_sentiment_analysis, extract_key_words
+from .helpers import construct_run_input, generate_sentiment_analysis, dump_into_json, generate_product_analysis
 from rest_framework.response import Response
 from rest_framework import status
 from requests import get
-from .serializers import ProductSerializer, ReviewSerializer
-from .models import Review, Product
+from .serializers import ProductSerializer, ReviewSerializer, AnalysisSerializer
+from .models import Review, Product, Analysis
+import json
+#
+
+@api_view(['GET'])
+def dump_into_json_route(request):
+    all_reviews = Review.objects.all()
+    all_reviews_serialized = ReviewSerializer(all_reviews, many=True)
+
+    all_products = Product.objects.all()
+    all_products_serialized = ProductSerializer(all_products, many=True)
+
+    all_analysis = Analysis.objects.all()
+    all_analysis_serialized = AnalysisSerializer(all_analysis, many=True)
+
+    payload = {"reviews": all_reviews_serialized.data,
+               "products": all_products_serialized.data,
+               "analysis": all_analysis_serialized.data}
+
+    with open("db.json", "w") as db:
+        db.write(json.dumps(payload))
+
+    return Response({}, status=status.HTTP_200_OK)
+
+
+
 
 @api_view(['GET'])
 def get_product_analysis(request):
@@ -44,7 +69,7 @@ def get_product_analysis(request):
         if len(all_reviews_for_product) > 0:
             average_rating = total_rating / len(all_reviews_for_product)
         sentiment_analysis = generate_sentiment_analysis([x.content for x in all_reviews_for_product])
-        review_keywords = extract_key_words([x.content for x in all_reviews_for_product])
+        # review_keywords = extract_key_words([x.content for x in all_reviews_for_product])
         payload = {
             "review_country": review_country,
             "star_reviews_1": star_reviews_1,
@@ -54,8 +79,9 @@ def get_product_analysis(request):
             "star_reviews_5": star_reviews_5,
             "average_rating": average_rating,
             "sentiment_analysis": sentiment_analysis,
-            "review_keywords": review_keywords.split(",")
         }
+
+
 
         return Response({"analysis": payload}, status=status.HTTP_200_OK)
 
@@ -114,6 +140,7 @@ def scrape_new_reviews_for_product(request):
 
 
 
+
     # load the response into a list of dictionaries
     all_reviews_data_parsed = resp
     # For each response, make a database entry and save it
@@ -122,11 +149,14 @@ def scrape_new_reviews_for_product(request):
             review_url = review_data.get("reviewUrl", "n/a"),
             score = review_data.get("ratingScore", 0),
             country = review_data.get("country", "n/a"),
-            content = (review_data.get("reviewTitle", "n/a") + ":" + review_data.get("reviewDescription")),
+            content = (review_data.get("reviewTitle", "n/a") + ":" + review_data.get("reviewDescription", "n/a")),
             date_posted = review_data.get("date", "n/a"),
             associated_product_url = product_url,
         )
         new_review.save()
+    generate_product_analysis(product_url)
+    dump_into_json()
+
 
 
 
