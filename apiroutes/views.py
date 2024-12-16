@@ -30,6 +30,15 @@ def dump_into_json_route(request):
     with open("db.json", "w") as db:
         db.write(json.dumps(payload))
 
+    with open("reviews.json", "w") as review_file:
+        review_file.write(json.dumps({"reviews": all_reviews_serialized.data}))
+
+    with open("product.json", "w") as product_file:
+        product_file.write(json.dumps({"products": all_products_serialized.data}))
+
+    with open("analysis.json", "w") as analysis_file:
+        analysis_file.write(json.dumps({"analysis": all_analysis_serialized.data}))
+
     return Response({}, status=status.HTTP_200_OK)
 
 
