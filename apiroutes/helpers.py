@@ -79,7 +79,7 @@ def dump_into_json():
 
 
 
-def generate_product_analysis(product_url):
+def generate_product_analysis(product_url, product_name):
     try:
         all_reviews_for_product = Review.objects.filter(associated_product_url=product_url)
         star_reviews_1 = 0
@@ -110,6 +110,15 @@ def generate_product_analysis(product_url):
             average_rating = total_rating / len(all_reviews_for_product)
         sentiment_analysis = generate_sentiment_analysis([x.content for x in all_reviews_for_product])
 
+        try:
+            associated_product = Product.objects.get(product_url=product_url)
+        except Exception as e:
+            associated_product = Product(
+                product_name=product_name,
+                product_url=product_url,
+            )
+            associated_product.save()
+
         new_analysis = Analysis(
             associated_product_url=product_url,
             review_country=review_country,
@@ -119,7 +128,9 @@ def generate_product_analysis(product_url):
             four_star_rating=star_reviews_4,
             five_star_rating=star_reviews_5,
             sentiment_analysis=sentiment_analysis,
-            average_rating=average_rating
+            average_rating=average_rating,
+            product_name=product_name,
+            product_id = associated_product.pk,
         )
         new_analysis.save()
 

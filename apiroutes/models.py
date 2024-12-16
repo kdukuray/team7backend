@@ -1,6 +1,8 @@
 from django.db import models
 
 class Review(models.Model):
+    product_name = models.CharField(max_length=255, default='Samsung Galaxy S24 Ultra')
+    product_id = models.IntegerField(default=2)
     review_url = models.CharField(max_length=255)
     score = models.IntegerField()
     country = models.CharField(max_length=255)
@@ -15,6 +17,8 @@ class Product(models.Model):
 
 
 class Analysis(models.Model):
+    product_name = models.CharField(max_length=255, default='Samsung Galaxy S24 Ultra')
+    product_id = models.IntegerField(default=2)
     associated_product_url = models.CharField(max_length=255)
     review_country = models.TextField()
     one_star_rating = models.IntegerField()

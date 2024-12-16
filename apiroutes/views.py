@@ -132,11 +132,11 @@ def scrape_new_reviews_for_product(request):
     try:
         associated_product = Product.objects.get(product_url=product_url)
     except Exception as e:
-        new_product = Product(
+        associated_product = Product(
             product_name=product_name,
             product_url=product_url,
         )
-        new_product.save()
+        associated_product.save()
 
 
 
@@ -152,9 +152,11 @@ def scrape_new_reviews_for_product(request):
             content = (review_data.get("reviewTitle", "n/a") + ":" + review_data.get("reviewDescription", "n/a")),
             date_posted = review_data.get("date", "n/a"),
             associated_product_url = product_url,
+            product_name = product_name,
+            product_id = associated_product.pk,
         )
         new_review.save()
-    generate_product_analysis(product_url)
+    generate_product_analysis(product_url, product_name)
     dump_into_json()
 
 
