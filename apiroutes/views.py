@@ -6,10 +6,8 @@ from os import environ
 from .helpers import construct_run_input, generate_sentiment_analysis, extract_key_words
 from rest_framework.response import Response
 from rest_framework import status
-from openai import OpenAI
 from requests import get
 from .serializers import ProductSerializer, ReviewSerializer
-from typing import Dict
 from .models import Review, Product
 
 @api_view(['GET'])
@@ -97,13 +95,13 @@ def scrape_new_reviews_for_product(request):
 
     # This runs the specific scrapper that we need to use
     # this should be uncommented later. Right now, I want to test it on the data that I already have
-    # run = apify_client.actor("R8WeJwLuzLZ6g4Bkk").call(run_input=run_input)
-    # resp = apify_client.dataset(run["defaultDatasetId"]).iterate_items()
+    run = apify_client.actor("R8WeJwLuzLZ6g4Bkk").call(run_input=run_input)
+    resp = apify_client.dataset(run["defaultDatasetId"]).iterate_items()
 
 
     # Portion of code to be deleted
-    resp = get("https://api.apify.com/v2/datasets/tbWfTQXAiNzhtUweB/items?token=apify_api_cH1VXiOzACW1yTd6oHRcD8FxPzgbim2iaRwu")
-    resp = resp.json()
+    # resp = get("https://api.apify.com/v2/datasets/tbWfTQXAiNzhtUweB/items?token=apify_api_cH1VXiOzACW1yTd6oHRcD8FxPzgbim2iaRwu")
+    # resp = resp.json()
 
     # Create the product and save it in the products database
     try:
