@@ -9,11 +9,13 @@ class Review(models.Model):
     content = models.TextField()
     date_posted = models.CharField(max_length=255)
     associated_product_url = models.CharField(max_length=255)
+    brand_name = models.CharField(max_length=255, default='')
 
 
 class Product(models.Model):
     product_name = models.CharField(max_length=255)
     product_url = models.CharField(max_length=255)
+    brand_name = models.CharField(max_length=255, default='')
 
 
 class Analysis(models.Model):
@@ -28,6 +30,7 @@ class Analysis(models.Model):
     five_star_rating = models.IntegerField()
     sentiment_analysis = models.TextField()
     average_rating = models.FloatField()
+    brand_name = models.CharField(max_length=255, default='')
 
 
 
