@@ -14,7 +14,6 @@ class Product(models.Model):
     product_url = models.CharField(max_length=255)
 
 
-
 class Analysis(models.Model):
     associated_product_url = models.CharField(max_length=255)
     review_country = models.TextField()
